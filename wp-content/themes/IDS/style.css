@@ -1,0 +1,18 @@
+/*
+Theme Name: Incredible Developing solution
+Theme URI: https://incredible-developers.com
+Author: IDS teams
+Author URI: https://incredible-developers.com
+Description: My First wordpress custom child
+Text Domain: twentysixteen
+ Template:     twentysixteen
+This theme, like WordPress, is licensed under the GPL.
+Use it to make something cool, have fun, and share what you've learned with others.
+*/
+.contentField {
+  margin-bottom: 13px;
+}
+.titleName {
+  font-size: 21px;
+  margin-right: 24px;
+}
