@@ -3,6 +3,16 @@
 * Database table name
 */
 define(COUNTRY,'country');
+ 
+/*
+* Function Name : debug
+* Parameter     : $variable -> Enter the variable name and variable value is olny array
+*/
+function debug($variable){
+  echo "<pre>";
+    print_r($variable);
+  echo "</pre>";
+}
 
 add_action( 'wp_enqueue_scripts', 'custom_child', 1000 );
 function custom_child() {
@@ -71,9 +81,9 @@ function wpdocs_register_my_custom_menu_page() {
 add_action( 'admin_menu', 'wpdocs_register_my_custom_menu_page' );
 
 function addNew_page(){
-  //include_once('template-part/country/register.php');?>
-  <h1>Listing of Country</h1>
-<?php
+  global $wpdb;
+  include_once('template-part/country/listing.php');
+  return;
 }
 
 /**

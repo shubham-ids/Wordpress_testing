@@ -12,12 +12,12 @@
         <div id="post-body-content" style="position: relative;">
           <div id="titlediv">
             <?php
-              addInputField('title' , 'Enter Country Name' , empty($country) ? '' : $country);
-              addTextArea('description' ,'Enter Discription' ,empty($description) ? '' : $description );
+              addInputField('title' , 'Enter Country Name' , empty($row['country']) ? '' : $row['country']);
+              addTextArea('description' ,'Enter Discription' ,empty($row['description']) ? '' : $row['description'] );
             ?>               
           </div>        
         </div>
-        <?php publishButton('Publish :' , 'update' , 'Update'); ?>
+        <?php publishButton('Publish :' , 'register' , 'Publish'); ?>
       </div>       
      </div>
   </div>
