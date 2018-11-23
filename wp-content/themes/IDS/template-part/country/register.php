@@ -17,7 +17,7 @@
             ?>               
           </div>        
         </div>
-        <?php publishButton('Publish :' , 'update' , 'Update'); ?>
+        <?php publishButton('Publish :' , 'register' , 'Publish'); ?>
       </div>       
      </div>
   </div>

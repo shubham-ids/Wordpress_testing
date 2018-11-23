@@ -29,7 +29,7 @@ function custom_css(){
 function wpdocs_register_my_custom_menu_page() {
   add_menu_page(
     'Custom Menu Title',        // Title page
-    'Manage Location',          // Menu Name
+    'Country',          // Menu Name
     'manage_options',           // Capability
     'manage-location-option',   // Slug
     'addNew_page',              // Function Name
@@ -40,15 +40,6 @@ function wpdocs_register_my_custom_menu_page() {
 /**
  * Adds a submenu page under a custom post type parent.
  */
-
-  add_submenu_page(
-    'manage-location-option',   // parent_slug
-    'Manage location',          // Page Title
-    'Country',                  // Menu title
-    'manage_options',           // capability
-    'add-new-country',          // sub menu slug
-    'country_ref_page_callback' // function name
-  );
 
   add_submenu_page(
     'manage-location-option', // parent_slug
@@ -82,21 +73,21 @@ add_action( 'admin_menu', 'wpdocs_register_my_custom_menu_page' );
 
 function addNew_page(){
   global $wpdb;
-  include_once('template-part/country/listing.php');
-  return;
-}
-
-/**
- * Display callback for the submenu page.
- * This function is used to add of the new country
- * Parameter : null
- * Return    : true
- */
-function country_ref_page_callback() { 
-  global $wpdb; 
-  include_once('template-part/country/phpCode/add.php');
-  include_once('template-part/country/register.php'); 
-  return;
+  if($_REQUEST['action'] == 'add'){
+    include_once('template-part/country/phpCode/add.php');
+    include_once('template-part/country/register.php'); 
+    return;
+  }
+  if(!isset($_REQUEST['action'])){
+    include_once('template-part/country/phpCode/list.php');
+    include_once('template-part/country/listing.php');
+    return;
+   }
+  if($_REQUEST['action'] == 'edit'){
+    include_once('template-part/country/phpCode/edit.php');
+    include_once('template-part/country/update.php');
+    return;
+  }
 }
 
 /**
@@ -163,3 +154,16 @@ function publishButton($lable , $name ,$value){ ?>
     </div>
   </div>
 <?php }
+/*
+ * Function Name : DeleteAction
+ * Parameter     : $tableName -> write the table name from database
+                 : $id        -> Send the delete record  id
+ * Return        : deleteQuery
+*/
+  function DeleteAction( $tableName , $id){
+// This method is used to multiple record delete in databases    
+    global $wpdb;
+    $table = $wpdb->prefix . $tableName;
+    $deleteQuery = $wpdb->delete($table , array('id' => $id) , array('%d'));
+    return $deleteQuery;                 
+  } 

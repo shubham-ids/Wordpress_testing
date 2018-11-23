@@ -12,20 +12,26 @@
       }
 
       if($validationError === false){
-        $row = [
-          'title'       => $country,
-          'description' => $description
-        ];
         $tableName = $wpdb->prefix . COUNTRY;
-        $insertCountry = $wpdb->insert($tableName , $row ,array('%s'));
-        if($insertCountry !== false){
-          $message = requiredMessage("updated","Data Insert");
+        $row       = $wpdb->get_results("SELECT * FROM `".$tableName."` WHERE `title` = '".$country."'");
+        $rowCount  =  $wpdb->num_rows;
+        if( $rowCount < 1 ){        
+          $row = [
+            'title'       => $country,
+            'description' => $description
+          ];
+          $insertCountry = $wpdb->insert($tableName , $row ,array('%s'));
+          if($insertCountry !== false){
+            $message = requiredMessage("updated","Data Insert.");
+          }else{
+            $message = requiredMessage("error","Data Not inserted.");
+          }
         }else{
-          $message = requiredMessage("error","Data Not inserted");
-        }
+          $message = requiredMessage("error","<strong>".$country. "</strong> is already exists");
+        } 
       }    
     }    
   }catch(PDOException $e){
-    echo "<h3 class='text-red'><i class='icon fa fa-ban'></i> your record is not insert please contact the developer</h3>";
+    echo "<h3 class='text-red'>your record is not insert please contact the developer</h3>";
     //echo $e->getMessage();
   }
