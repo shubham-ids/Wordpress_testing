@@ -120,7 +120,7 @@ function All_countries(){
     return $message;
   }
 /*
-*
+* Function Name : 
 *
 */
 function addInputField($name , $placeholder , $value){ ?>
@@ -129,11 +129,20 @@ function addInputField($name , $placeholder , $value){ ?>
   </div>  
 <?php }
 
+/*
+* Function Name :
+*
+*/
 function addTextArea($name , $placeholder , $value){ ?>
   <div id="titlewrap">
     <textarea class="wp-editor-area" style="width: 100%; height: 300px;" autocomplete="off" cols="40" id="content" name="<?php echo $name; ?>" placeholder="<?php echo $placeholder; ?>"><?php echo $value; ?></textarea>
   </div>  
 <?php }
+
+/*
+* Fuction Name :
+*
+*/
 function publishButton($lable , $name ,$value){ ?>
   <div id="postbox-container-1" class="postbox-container">
     <div id="side-sortables" class="meta-box-sortables ui-sortable" style="">
@@ -167,3 +176,43 @@ function publishButton($lable , $name ,$value){ ?>
     $deleteQuery = $wpdb->delete($table , array('id' => $id) , array('%d'));
     return $deleteQuery;                 
   } 
+/*
+* Function Name :
+*
+*/
+  function OrderIcon($displayName , $columnName , $order){ ?>
+    <th 
+      scope="col" 
+      id="<?php echo $columnName; ?>" 
+      class="manage-column column-<?php echo $columnName; ?> column-primary sortable <?php echo $order; ?>">
+      <a href="<?php echo admin_url('admin.php?page=manage-location-option','admin')?>&order-by=<?php echo $columnName; ?>&order=<?php echo $order == 'desc'?'asc':'desc'; ?>">
+      <span><?php echo $displayName; ?></span>
+      <span class="sorting-indicator"></span>
+      </a>
+    </th>
+
+ <?php } 
+
+/*
+* Function Name : renderTableHead
+* parameter     : $tableHeadName -> write the database table column name
+                    and write the name from user table head name using in array key value
+*               : $odder         -> set the default order value in assending and dessending value
+*               : $currentPage   -> set the current page value
+* Return        : ture           -> Return the true value when accept the parameter value
+                : false          -> Return  the false value when not accept the parameters
+*/
+  function renderTableHead( $tableHeadName , $order  ){ ?>
+    <td id="cb" class="manage-column column-cb check-column">
+      <label class="screen-reader-text" for="cb-select-all-1">Select All</label>
+      <input id="cb-select-all-1" type="checkbox">
+    </td>
+ <?php   foreach($tableHeadName as $key => $value){
+ ?>
+      <th scope="col" id="<?php echo $key; ?>" class="manage-column column-<?php echo $key; ?>">
+        <?php echo $value; ?>
+      </th>
+<?php 
+    }
+    return false;
+  }
