@@ -6,6 +6,11 @@ define(COUNTRY,'country');
 define(STATE,'state');
 define(DISTRICT,'district');
 define(CITY,'city');
+
+if(!class_exists('WP_List_Table')){
+    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+}
+ 
  
 /*
 * Function Name : debug
@@ -76,11 +81,12 @@ function wpdocs_register_my_custom_menu_page() {
 }
 add_action( 'admin_menu', 'wpdocs_register_my_custom_menu_page' );
 
+
 function addNew_page(){
   global $wpdb;
   if($_REQUEST['action'] == 'add'){
     include_once('template-part/country/phpCode/add.php');
-    include_once('template-part/country/register.php'); 
+    include_once('template-part/country/register.php');
     return;
   }
   if(!isset($_REQUEST['action'])){
@@ -163,8 +169,10 @@ function city_ref_page_callback(){
     return $message;
   }
 /*
-* Function Name : 
-*
+* Function Name : addInputField
+* Parameter     : $name -> Enter the field of name
+                : $placeholder -> Enter the text in placeholder
+                : $value -> Enter the input field value
 */
 function addInputField($name , $placeholder , $value){ ?>
   <div  class="titlewrap contentField"> 
@@ -173,8 +181,10 @@ function addInputField($name , $placeholder , $value){ ?>
 <?php }
 
 /*
-* Function Name :
-*
+* Function Name : addTextArea
+* Parameter     : $name -> Enter the field of name
+                : $placeholder -> Enter the text in placeholder
+                : $value -> Enter the textarea field value
 */
 function addTextArea($name , $placeholder , $value){ ?>
   <div id="titlewrap">
