@@ -4,21 +4,25 @@
   }
   echo $message;
 ?>   
-<form method="post">
-  <div class="wrap">
-    <h1 class="wp-heading-inline">update Country</h1>   
-    <div id="poststuff">
-      <div id="post-body" class="metabox-holder columns-2">      
-        <div id="post-body-content" style="position: relative;">
-          <div id="titlediv">
-            <?php
-              addInputField('title' , 'Enter Country Name' , empty($row[0]->title) ? '' : $row[0]->title);
-              addTextArea('description' ,'Enter Discription' ,empty($row[0]->description) ? '' : $row[0]->description );
-            ?>               
-          </div>        
-        </div>
-        <?php publishButton('Publish :' , 'update' , 'Update'); ?>
-      </div>       
-     </div>
-  </div>
-</form> 
+<div class="wrap">
+  <h1 class="wp-heading-inline">update Country</h1> 
+  <form method="post">
+    <table class="form-table">
+      <tbody>
+        <?php
+          generalAddField(
+            'title' , 
+            'Country' , 
+            empty($row[0]->title) ? '' : $row[0]->title ,
+            'Enter New Country Name');
+          generalAddtextField(
+            'description' , 
+            'Description' , 
+            empty($row[0]->description) ? '' : $row[0]->description , 
+            'Enter Description');      
+        ?>
+      </tbody>
+    </table>
+     <?php generalbutton('update' , 'Save Changes'); ?>    
+  </form>  
+</div>

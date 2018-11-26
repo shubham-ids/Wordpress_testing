@@ -1,12 +1,22 @@
 <?php
   try{
-    $task        = isset($_REQUEST['task'])        ? $_REQUEST['task'] :'';
-    $multiAction = isset($_REQUEST['multiAction']) ? $_REQUEST['multiAction'] :'';
-    $user        = (isset($_REQUEST['users']))     ? $_REQUEST['users']    : '';
-  $orderBy      = isset($_REQUEST['order-by'])      ? $_REQUEST['order-by']    : "";
-  $order        = isset($_REQUEST['order'])         ? $_REQUEST['order']       : 'DESC';    
-   $searchBar    = (isset($_REQUEST['searchBar']) )  ? $_REQUEST['searchBar']   : ''; 
-   $tableName = $wpdb->prefix . COUNTRY;  
+    $task         = isset($_REQUEST['task'])        ? $_REQUEST['task'] :'';
+    $multiAction  = isset($_REQUEST['multiAction']) ? $_REQUEST['multiAction'] :'';
+    $user         = (isset($_REQUEST['users']))     ? $_REQUEST['users']    : '';
+    $orderBy      = isset($_REQUEST['order-by'])      ? $_REQUEST['order-by']    : "";
+    $order        = isset($_REQUEST['order'])         ? $_REQUEST['order']       : 'DESC';    
+    $searchBar    = (isset($_REQUEST['searchBar']) )  ? $_REQUEST['searchBar']   : ''; 
+    $page         = (isset($_REQUEST['pageNo']) )       ? $_REQUEST['pageNo']        : 1;
+    
+    $currentPage  = empty($page)      ? 1  : intval( $page );
+    $searchBar    = empty($searchBar) ? '' : $searchBar;
+    $currentPage  = ($currentPage <= 0) ? 1  : $currentPage;
+    
+    $record_perpage = 2;
+    $limitPosition  = ( $currentPage - 1) * $record_perpage;
+    $queryPart      = "";    
+    $tableName      = $wpdb->prefix . COUNTRY;  
+  
   // This custom function is used to delete of the multiple records
     if($multiAction == 'deleted'){
       foreach( $user as $id ){
@@ -48,11 +58,13 @@
       `".$tableName."`
       {$queryPart}
       {$orderPart}
+    LIMIT ".$limitPosition." , ".$record_perpage."
     ";  
   //echo $query;
   
-   $result    = $wpdb->get_results($query); 
-   $rowCount   = $wpdb->get_var('SELECT FOUND_ROWS()'); 
+  $result     = $wpdb->get_results($query); 
+  $rowCount   = $wpdb->get_var('SELECT FOUND_ROWS()'); 
+  $totalpages = ceil( $rowCount / $record_perpage );
   }catch(PDOException $e){
     echo "Not display the record contact the developer";
     echo $e->getMessage();

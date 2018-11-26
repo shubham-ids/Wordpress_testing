@@ -3,6 +3,9 @@
 * Database table name
 */
 define(COUNTRY,'country');
+define(STATE,'state');
+define(DISTRICT,'district');
+define(CITY,'city');
  
 /*
 * Function Name : debug
@@ -14,15 +17,17 @@ function debug($variable){
   echo "</pre>";
 }
 
-add_action( 'wp_enqueue_scripts', 'custom_child', 1000 );
+add_action( 'wp_enqueue_scripts', 'custom_child', 10 );
 function custom_child() {
   wp_enqueue_style( 'twentysixteen', get_template_directory_uri() . '/style.css' );
   wp_enqueue_style( 'custom-child', get_stylesheet_directory_uri() . '/style.css' );
 }
+
 add_action( 'admin_enqueue_scripts', 'custom_css' );
 function custom_css(){
  wp_enqueue_style( 'custom-child', get_stylesheet_directory_uri() . '/style.css' ); 
 }
+
 /**
  * Register a custom menu page.
  */
@@ -94,20 +99,58 @@ function addNew_page(){
  * Display callback for the submenu page.
  */
 function state_ref_page_callback() { 
-    ?>
-    <div class="wrap">
-        <h1>Add new State</h1>
-        <p>Stuff Here</p>
-    </div>
-    <?php
+  global $wpdb;
+  if($_REQUEST['action'] == 'add'){
+    include_once('template-part/state/phpCode/add.php');
+    include_once('template-part/state/register.php'); 
+    return;
+  }
+  if(!isset($_REQUEST['action'])){
+    include_once('template-part/state/phpCode/list.php');
+    include_once('template-part/state/listing.php');
+    return;
+   }
+  if($_REQUEST['action'] == 'edit'){
+    include_once('template-part/state/phpCode/edit.php');
+    include_once('template-part/state/update.php');
+    return;
+  }
 }
-function All_countries(){
-      ?>
-    <div class="wrap">
-        <h1>All countries</h1>
-        <p>Stuff Here</p>
-    </div>
-    <?php
+function district_ref_page_callback(){
+  global $wpdb;
+  if($_REQUEST['action'] == 'add'){
+    include_once('template-part/district/phpCode/add.php');
+    include_once('template-part/district/register.php'); 
+    return;
+  }
+  if(!isset($_REQUEST['action'])){
+    include_once('template-part/district/phpCode/list.php');
+    include_once('template-part/district/listing.php');
+    return;
+   }
+  if($_REQUEST['action'] == 'edit'){
+    include_once('template-part/district/phpCode/edit.php');
+    include_once('template-part/district/update.php');
+    return;
+  }
+} 
+function city_ref_page_callback(){
+  global $wpdb;
+  if($_REQUEST['action'] == 'add'){
+    include_once('template-part/city/phpCode/add.php');
+    include_once('template-part/city/register.php'); 
+    return;
+  }
+  if(!isset($_REQUEST['action'])){
+    include_once('template-part/city/phpCode/list.php');
+    include_once('template-part/city/listing.php');
+    return;
+   }
+  if($_REQUEST['action'] == 'edit'){
+    include_once('template-part/city/phpCode/edit.php');
+    include_once('template-part/city/update.php');
+    return;
+  }
 } 
 /*
  * Function Name : requiredMessage()
@@ -176,22 +219,6 @@ function publishButton($lable , $name ,$value){ ?>
     $deleteQuery = $wpdb->delete($table , array('id' => $id) , array('%d'));
     return $deleteQuery;                 
   } 
-/*
-* Function Name :
-*
-*/
-  function OrderIcon($displayName , $columnName , $order){ ?>
-    <th 
-      scope="col" 
-      id="<?php echo $columnName; ?>" 
-      class="manage-column column-<?php echo $columnName; ?> column-primary sortable <?php echo $order; ?>">
-      <a href="<?php echo admin_url('admin.php?page=manage-location-option','admin')?>&order-by=<?php echo $columnName; ?>&order=<?php echo $order == 'desc'?'asc':'desc'; ?>">
-      <span><?php echo $displayName; ?></span>
-      <span class="sorting-indicator"></span>
-      </a>
-    </th>
-
- <?php } 
 
 /*
 * Function Name : renderTableHead
@@ -203,10 +230,6 @@ function publishButton($lable , $name ,$value){ ?>
                 : false          -> Return  the false value when not accept the parameters
 */
   function renderTableHead( $tableHeadName , $order  ){ ?>
-    <td id="cb" class="manage-column column-cb check-column">
-      <label class="screen-reader-text" for="cb-select-all-1">Select All</label>
-      <input id="cb-select-all-1" type="checkbox">
-    </td>
  <?php   foreach($tableHeadName as $key => $value){
  ?>
       <th scope="col" id="<?php echo $key; ?>" class="manage-column column-<?php echo $key; ?>">
@@ -216,3 +239,201 @@ function publishButton($lable , $name ,$value){ ?>
     }
     return false;
   }
+
+/*
+* Function Name : addBulkactionField
+*
+*/
+  function addBulkactionField($setField , $addoption , $fieldName ,$rowCount){ ?>
+    <div class="tablenav <?php echo $setField; ?>">
+      <div class="alignleft actions bulkactions">
+        <label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
+        <select name="<?php echo $fieldName; ?>" id="bulk-action-selector-top">
+          <?php
+            foreach($addoption as $key => $value){
+          ?>
+            <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+          <?php } ?>
+        </select>
+        <input type="submit" id="doaction" class="button action" value="Apply">
+      </div>
+      <div class="tablenav-pages one-page">
+        <span class="displaying-num"><?php echo $rowCount; ?> items</span>
+      </div>
+      <br class="clear">
+    </div>  
+ <?php }  
+ /*
+ *
+ *
+ */
+   function addSearchField($name , $value){ ?>
+    <p class="search-box">
+      <label class="screen-reader-text" for="post-search-input">Search Posts:</label>
+      <input 
+        type="search" 
+        id="post-search-input" 
+        name="<?php echo $name; ?>" 
+        value="<?php echo $value; ?>">
+      <input type="submit" id="search-submit" class="button" value="Search Posts">
+    </p> 
+<?php }
+/*
+*
+*
+*/
+  function generalAddField($name , $displayName ,$value , $placeholder){ ?>
+    <tr>
+      <th scope="row"><label for="blogname"><?php echo $displayName; ?></label></th>
+      <td>
+        <input name="<?php echo $name; ?>" type="text" id="blogname" value="<?php echo $value; ?>" class="regular-text custom_text" placeholder="<?php echo $placeholder; ?>">
+      </td>
+    </tr>
+<?php  }
+/*
+*
+*
+*/
+  function generalAddtextField($name , $displayName ,$value , $placeholder){ ?>
+    <tr>
+      <th scope="row"><label for="blogname"><?php echo $displayName; ?></label></th>
+      <td>
+        <textarea name="<?php echo $name; ?>" type="text" id="blogname" class="regular-text custom_textarea" placeholder="<?php echo $placeholder; ?>"><?php echo $value; ?></textarea>
+      </td>
+    </tr>
+<?php  } 
+/*
+*
+*
+*/
+  function generalbutton($name ,$value){ ?>
+    <p class="submit">
+      <input type="submit" name="<?php echo $name; ?>" id="submit" class="button button-primary" value="<?php echo $value  ?>">
+    </p>
+<?php  }
+/*
+*
+*
+*/
+  function generalDropDown($lable,$name,$request){ 
+    global $wpdb;
+?>
+    <tr>
+      <th scope="row">
+        <label for="default_role"><?php echo $lable; ?></label>
+      </th>
+      <td>
+        <select id="country" class="custom_text" name="<?php echo $name; ?>">
+          <option value="">Select</option>
+          <?php
+            $tableName = $wpdb->prefix . COUNTRY;
+            $result = $wpdb->get_results("SELECT * FROM ".$tableName );
+            foreach ($result as $fetch) { ?>
+              <option <?php echo ($request == $fetch->id) ? 'selected="selected"' : ''  ?> value="<?php echo $fetch->id; ?>"><?php echo $fetch->title; ?></option>
+            <?php }
+          ?>
+        </select>
+      </td>
+    </tr> 
+<?php  }
+/*
+*
+*
+*/
+  function dependentDropdown($lable , $name ,$fieldId){ ?>
+    <tr>
+      <th scope="row">
+        <label for="default_role"><?php echo $lable; ?></label>
+      </th>
+      <td>
+        <select id="<?php echo $fieldId; ?>" class="custom_text" name="<?php echo $name; ?>" disabled="">
+        </select>
+      </td>
+    </tr> 
+<?php  }
+/*
+ * Function Name : DependentTable
+ * Parameter     : $requestName -> Isme server se jo request name aai hai uskol define krna hai.
+                 : $tableName -> Enter the table name
+                 : $databaseColumn -> Enter the table in which include column name 
+                 : $name -> Enter the select dropdown field name
+ * Return        : true
+ */
+function DependentTable($requestName , $tableName , $databaseColumn , $name , $displayName){
+  global $wpdb;
+  if(!empty($_REQUEST[$requestName])){
+    $query = "SELECT * FROM `".$tableName."` WHERE `".$databaseColumn."` = ".$_REQUEST[$requestName];
+    $State  =  $wpdb->get_results($query);
+    echo "<option value=''>Select ".$displayName."</option>";
+    foreach( $State as $fetch ){ ?>
+      <option value="<?php echo $fetch->id; ?>" <?php echo ($name == $fetch->id) ? 'selected ="selected" ' : '' ?>><?php echo $fetch->title; ?></option>
+<?php 
+    }
+  } 
+  return true; 
+}
+
+/*
+* Function Name : jqueryAjax
+*
+*/
+  function jqueryAjax(){ ?>
+    <script type="text/javascript">
+      jQuery(document).ready(function(){
+    // This method is used to first dropdown select Value
+    // Then fetch the data   
+        jQuery('#country').on('change',function(){
+        // This method is used to get the drop down select value
+          var country = '';
+          jQuery.each(jQuery("#country option:selected"), function(){            
+            country = jQuery(this).val();
+            jQuery('#state').removeAttr("disabled");
+            jQuery('#district').removeAttr("disabled");
+          });
+          if(country == ''){
+            jQuery('#state').attr("disabled",'');
+            jQuery('#district').attr("disabled",'');
+            return; 
+          }
+          if(country != ''){
+            jQuery.ajax({
+              type: "post",
+              url:  "state.php",
+              data: {CountryId:country},          
+              success: function(data){
+                jQuery('#state').html(data);
+              },
+              error: function(){
+                alert('Something is wrong !');
+              },       
+            });
+          }
+        });
+        jQuery('#state').on('change',function(){
+        // This method is used to get the drop down select value
+          var state = '';
+          jQuery.each(jQuery("#state option:selected"), function(){            
+            state = jQuery(this).val();
+          });  
+          console.log(state); 
+          if(state == ''){
+            return jQuery('#district').attr("disabled",''); 
+          }  
+          if(state != ''){  
+            jQuery('#district').removeAttr("disabled");
+            jQuery.ajax({
+              type: "post",
+              url:  "state.php",
+              data: {stateId:state},         
+              success: function(data){
+                jQuery('#district').html(data);
+              },
+              error: function(){
+                alert('Something is wrong !');
+              },                    
+            });
+          }    
+        });        
+      }); 
+    </script>
+<?php  }
