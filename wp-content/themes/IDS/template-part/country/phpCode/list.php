@@ -1,5 +1,5 @@
 <?php
-
+ $message = "";
 /************************** CREATE A PACKAGE CLASS *****************************
  *******************************************************************************
  * Create a new list table package that extends the core WP_List_Table class.
@@ -31,12 +31,22 @@ class Custom_List_Table extends WP_List_Table {
 
 
   function custom_record(){
-   global $wpdb;
-
-   //return  $wpdb->get_results("SELECT * FROM `wp_country`", ARRAY_A ); 
-   $fatchQuery = $wpdb->get_results("SELECT * FROM `wp_country`");  
-
-   //$response = [];
+    global $wpdb;
+    $table = $wpdb->prefix . COUNTRY; 
+    if(!empty($_REQUEST['searchBar'])){
+      $queryPart = "
+      WHERE
+        `title` LIKE '%".$_REQUEST['searchBar']."%'
+      ";
+    }    
+   $query = "
+    SELECT
+    *
+    FROM 
+       `".$table."`
+       {$queryPart} 
+   ";
+   $fatchQuery = $wpdb->get_results($query);  
      foreach ($fatchQuery as $value) {
       $response[] = array(
           'id'          => $value->id, 
@@ -45,11 +55,6 @@ class Custom_List_Table extends WP_List_Table {
           'create_on'   => $value->create_on
       );
     }  
-
-// echo "<pre>";
-//   print_r($response);
-// echo "</pre>";
-
      return $response;
 }
 
@@ -126,14 +131,14 @@ class Custom_List_Table extends WP_List_Table {
         
         //Build row actions
         $actions = array(
-            'edit'      => sprintf('<a href="?page=%s&action=%s&post=%s">Edit</a>',$_REQUEST['page'],'edit',$item['id']),
-            'delete'    => sprintf('<a href="?page=%s&action=%s&post=%s">Delete</a>',$_REQUEST['page'],'delete',$item['id']),
+            'edit'      => sprintf('<a href="?page=%s&task=%s&post=%s">Edit</a>',$_REQUEST['page'],'edit',$item['id']),
+            'delete'    => sprintf('<a href="?page=%s&task=%s&post=%s">Delete</a>',$_REQUEST['page'],'delete',$item['id']),
         );
         
         //Return the title contents
-        return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
+        return sprintf('%1$s %3$s',
             /*$1%s*/ $item['title'],
-            /*$2%s*/ $item['ID'],
+            /*$2%s*/ $item['id'],
             /*$3%s*/ $this->row_actions($actions)
         );
     }
@@ -150,9 +155,9 @@ class Custom_List_Table extends WP_List_Table {
      **************************************************************************/
     function column_cb($item){
         return sprintf(
-            '<input type="checkbox" name="%1$s[]" value="%2$s" />',
+            '<input type="checkbox" name="user[]" value="%2$s" />',
             /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("movie")
-            /*$2%s*/ $item['ID']                //The value of the checkbox should be the record's id
+            /*$2%s*/ $item['id']                //The value of the checkbox should be the record's id
         );
     }
 
@@ -221,7 +226,7 @@ class Custom_List_Table extends WP_List_Table {
      **************************************************************************/
     function get_bulk_actions() {
         $actions = array(
-            'delete'    => 'Delete'
+            'deleted'    => 'Delete'
         );
         return $actions;
     }
@@ -235,13 +240,35 @@ class Custom_List_Table extends WP_List_Table {
      * @see $this->prepare_items()
      **************************************************************************/
     function process_bulk_action() {
-        
-        //Detect when a bulk action is being triggered...
-        if( 'delete'===$this->current_action() ) {
-            wp_die('Items deleted (or they would be if we had items to delete)!');
-        }
-        
+       global $wpdb; 
+      //Detect when a bulk action is being triggered...
+        if( 'deleted' === $this->current_action() ) {
+          foreach ($_REQUEST['user'] as $id) {
+            $deleteQuery = DeleteAction( COUNTRY , $id);
+            if($deleteQuery === 0){
+              $message = requiredMessage("error","Record is not deleted.");
+            }else{
+              $message = requiredMessage("updated","Record are Delete Successfull.");
+            }
+          }
+           echo $message; 
+        } 
     }
+
+    function process_delete_action() {
+       global $wpdb; 
+      //Detect when a bulk action is being triggered...
+      $task = isset($_REQUEST['task']) ? $_REQUEST['task'] : '';
+      if($task === 'delete' ) {
+        $deleteQuery = DeleteAction( COUNTRY , $_REQUEST['post']);
+        if($deleteQuery === 0){
+          $message = requiredMessage("error","Record is not deleted.");
+        }else{
+          $message = requiredMessage("updated","Record are Delete Successfull.");
+        }
+         echo $message; 
+      } 
+    }    
 
 
     /** ************************************************************************
@@ -294,6 +321,7 @@ class Custom_List_Table extends WP_List_Table {
          * case, we'll handle them within our package just to keep things clean.
          */
         $this->process_bulk_action();
+        $this->process_delete_action();
         
         /**
          * Instead of querying a database, we're going to fetch the example data
@@ -304,6 +332,7 @@ class Custom_List_Table extends WP_List_Table {
          * use sort and pagination data to build a custom query instead, as you'll
          * be able to use your precisely-queried data immediately.
          */
+        //$data = empty($data) ? '' : $data;
         $data = $this->custom_record();
                 
         
@@ -373,6 +402,7 @@ class Custom_List_Table extends WP_List_Table {
          * REQUIRED. We also have to register our pagination options & calculations.
          */
         $this->set_pagination_args( array(
+            'searchBar'   => $searchBar,
             'total_items' => $total_items,                  //WE have to calculate the total number of items
             'per_page'    => $per_page,                     //WE have to determine how many items to show on a page
             'total_pages' => ceil($total_items/$per_page)   //WE have to calculate the total number of pages

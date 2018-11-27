@@ -94,6 +94,11 @@ function addNew_page(){
     include_once('template-part/country/listing.php');
     return;
    }
+  if($_REQUEST['action'] == 'deleted'){
+    include_once('template-part/country/phpCode/list.php');
+    include_once('template-part/country/listing.php');
+    return;
+   }
   if($_REQUEST['action'] == 'edit'){
     include_once('template-part/country/phpCode/edit.php');
     include_once('template-part/country/update.php');
@@ -281,7 +286,7 @@ function publishButton($lable , $name ,$value){ ?>
     <p class="search-box">
       <label class="screen-reader-text" for="post-search-input">Search Posts:</label>
       <input 
-        type="search" 
+        type="text" 
         id="post-search-input" 
         name="<?php echo $name; ?>" 
         value="<?php echo $value; ?>">

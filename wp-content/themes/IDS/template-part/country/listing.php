@@ -21,13 +21,17 @@
           <h1 class="wp-heading-inline">
             Countries
           </h1>
+          <?php echo $message; ?>
         <a href="<?php echo admin_url('admin.php?page=manage-location-option','admin'); ?>&&amp;action=add" class="page-title-action">Add New</a>
         <!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
-        <form id="movies-filter" method="get">
+        <form id="movies-filter" method="post">
             <!-- For plugins, we also need to ensure that the form posts back to our current page -->
             <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
             <!-- Now we can render the completed list table -->
-            <?php $testListTable->display() ?>
+            <?php 
+              addSearchField('searchBar' , empty($_REQUEST['searchBar']) ? '' : $_REQUEST['searchBar']);
+              $testListTable->display(); 
+            ?>
         </form>
         
     </div>
