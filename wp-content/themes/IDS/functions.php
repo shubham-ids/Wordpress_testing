@@ -2,10 +2,11 @@
 /*
 * Database table name
 */
-define(COUNTRY,'country');
-define(STATE,'state');
-define(DISTRICT,'district');
-define(CITY,'city');
+define(COUNTRY  , 'country');
+define(STATE    , 'state');
+define(DISTRICT , 'district');
+define(CITY     , 'city');
+define(COURSE   , 'courses');
 
 if(!class_exists('WP_List_Table')){
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
@@ -22,6 +23,9 @@ function debug($variable){
   echo "</pre>";
 }
 
+/*
+* THis method is used to add the custom JS / CSS file
+*/
 add_action( 'wp_enqueue_scripts', 'custom_child', 10 );
 function custom_child() {
   wp_enqueue_style( 'twentysixteen', get_template_directory_uri() . '/style.css' );
@@ -30,7 +34,10 @@ function custom_child() {
 
 add_action( 'admin_enqueue_scripts', 'custom_css' );
 function custom_css(){
- wp_enqueue_style( 'custom-child', get_stylesheet_directory_uri() . '/style.css' ); 
+ wp_enqueue_style( 'custom-child', get_stylesheet_directory_uri() . '/style.css' );
+ wp_enqueue_style( 'jquery-ui','//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' );
+ wp_enqueue_script( 'jquery-ui', '//code.jquery.com/ui/1.12.1/jquery-ui.js' );
+ wp_enqueue_script( 'custom-js', get_stylesheet_directory_uri() . '/custom-js.js' ); 
 }
 
 /**
@@ -81,6 +88,47 @@ function wpdocs_register_my_custom_menu_page() {
 }
 add_action( 'admin_menu', 'wpdocs_register_my_custom_menu_page' );
 
+/**
+ * Register a custom menu page.
+ */
+function wpdocs_register_my_custom_menu_Course() {
+  add_menu_page(
+    'Course',               // Title page
+    'courses',              // Menu Name
+    'manage_options',       // Capability
+    'add-course',           // Slug
+    'addNew_course',        // Function Name
+    'dashicons-welcome-learn-more', // Icon
+    5
+  );   
+ 
+}
+add_action( 'admin_menu', 'wpdocs_register_my_custom_menu_Course' );
+
+function addNew_course(){
+  global $wpdb;
+  if($_REQUEST['action'] == 'add'){
+    include_once('Course/phpCode/add.php');
+    include_once('Course/register.php');
+    return;
+  }
+  if(!isset($_REQUEST['action'])){
+    include_once('Course/phpCode/list.php');
+    include_once('Course/listing.php');
+    return;
+   }
+  if($_REQUEST['action'] == 'deleted'){
+    include_once('Course/phpCode/list.php');
+    include_once('Course/listing.php');
+    return;
+   }  
+  if($_REQUEST['action'] == 'edit'){
+    include_once('Course/phpCode/edit.php');
+    include_once('Course/update.php');
+    return;
+  }  
+}
+
 
 function addNew_page(){
   global $wpdb;
@@ -98,7 +146,7 @@ function addNew_page(){
     include_once('template-part/country/phpCode/list.php');
     include_once('template-part/country/listing.php');
     return;
-   }
+   }  
   if($_REQUEST['action'] == 'edit'){
     include_once('template-part/country/phpCode/edit.php');
     include_once('template-part/country/update.php');
@@ -297,11 +345,11 @@ function publishButton($lable , $name ,$value){ ?>
 *
 *
 */
-  function generalAddField($name , $displayName ,$value , $placeholder){ ?>
+  function generalAddField($type ,$name , $displayName ,$value){ ?>
     <tr>
-      <th scope="row"><label for="blogname"><?php echo $displayName; ?></label></th>
+      <th scope="row"><label for="blogname"><?php echo $displayName; ?><span class="star-requiredField">*</span></label></th>
       <td>
-        <input name="<?php echo $name; ?>" type="text" id="blogname" value="<?php echo $value; ?>" class="regular-text custom_text" placeholder="<?php echo $placeholder; ?>">
+        <input name="<?php echo $name; ?>" type="<?php echo $type; ?>" id="blogname" value="<?php echo $value; ?>" class="regular-text custom_text" placeholder="Enter <?php echo $displayName; ?>">
       </td>
     </tr>
 <?php  }

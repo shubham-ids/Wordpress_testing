@@ -33,18 +33,18 @@ class Custom_List_Table extends WP_List_Table {
   function custom_record(){
     global $wpdb;
     $table = $wpdb->prefix . COUNTRY; 
-    if(!empty($_REQUEST['searchBar'])){
+    if(!empty($_REQUEST['s'])){
       $queryPart = "
       WHERE
-        `title` LIKE '%".$_REQUEST['searchBar']."%'
+        `title` LIKE '%".$_REQUEST['s']."%'
       ";
     }    
    $query = "
     SELECT
     *
     FROM 
-       `".$table."`
-       {$queryPart} 
+      `".$table."`
+      {$queryPart} 
    ";
    $fatchQuery = $wpdb->get_results($query);  
      foreach ($fatchQuery as $value) {
@@ -131,7 +131,7 @@ class Custom_List_Table extends WP_List_Table {
         
         //Build row actions
         $actions = array(
-            'edit'      => sprintf('<a href="?page=%s&task=%s&post=%s">Edit</a>',$_REQUEST['page'],'edit',$item['id']),
+            'edit'      => sprintf('<a href="?page=%s&action=%s&post=%s">Edit</a>',$_REQUEST['page'],'edit',$item['id']),
             'delete'    => sprintf('<a href="?page=%s&task=%s&post=%s">Delete</a>',$_REQUEST['page'],'delete',$item['id']),
         );
         
@@ -231,7 +231,6 @@ class Custom_List_Table extends WP_List_Table {
         return $actions;
     }
 
-
     /** ************************************************************************
      * Optional. You can handle your bulk actions anywhere or anyhow you prefer.
      * For this example package, we will handle it in the class to keep things
@@ -292,9 +291,8 @@ class Custom_List_Table extends WP_List_Table {
         /**
          * First, lets decide how many records per page to show
          */
-        $per_page = 5;
-        
-        
+
+        $per_page = 5;    
         /**
          * REQUIRED. Now we need to define our column headers. This includes a complete
          * array of columns to be displayed (slugs & titles), a list of columns
