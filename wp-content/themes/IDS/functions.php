@@ -39,6 +39,10 @@ function custom_css(){
  wp_enqueue_script( 'jquery-ui', '//code.jquery.com/ui/1.12.1/jquery-ui.js' );
  wp_enqueue_script( 'custom-js', get_stylesheet_directory_uri() . '/custom-js.js' ); 
 }
+add_action( 'wp_ajax_custom-ajax', 'custom_ajax_code' );
+function custom_ajax_code(){
+  
+}
 
 /**
  * Register a custom menu page.
@@ -349,7 +353,7 @@ function publishButton($lable , $name ,$value){ ?>
     <tr>
       <th scope="row"><label for="blogname"><?php echo $displayName; ?><span class="star-requiredField">*</span></label></th>
       <td>
-        <input name="<?php echo $name; ?>" type="<?php echo $type; ?>" id="blogname" value="<?php echo $value; ?>" class="regular-text custom_text" placeholder="Enter <?php echo $displayName; ?>">
+        <input name="<?php echo $name; ?>" type="<?php echo $type; ?>" id="<?php echo $name; ?>" value="<?php echo $value; ?>" class="regular-text custom_text" placeholder="Enter <?php echo $displayName; ?>">
       </td>
     </tr>
 <?php  }
