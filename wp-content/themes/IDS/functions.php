@@ -39,9 +39,30 @@ function custom_css(){
  wp_enqueue_script( 'jquery-ui', '//code.jquery.com/ui/1.12.1/jquery-ui.js' );
  wp_enqueue_script( 'custom-js', get_stylesheet_directory_uri() . '/custom-js.js' ); 
 }
+
 add_action( 'wp_ajax_custom-ajax', 'custom_ajax_code' );
 function custom_ajax_code(){
-  
+
+  global $wpdb;
+// Generate skills data array
+  $tablename = $wpdb->prefix .'courses'; 
+  $skillData = array();
+  $request   = $_REQUEST['type'];
+  $value     = $_REQUEST['term'];
+
+  $query = "SELECT * FROM ".$tablename." WHERE `".$request."` LIKE '".$value."%' ";
+  $fatchrecord = $wpdb->get_results($query); 
+  foreach ($fatchrecord as $row) {
+    foreach ($row as $key => $value) {
+      if($key === $request){
+        $data[] = $value;          
+      }
+    }    
+  }
+  // Return results as json encoded array
+  echo json_encode($data);
+
+  die;  
 }
 
 /**

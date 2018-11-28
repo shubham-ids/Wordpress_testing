@@ -14,7 +14,8 @@ jQuery(document).ready(function(){
   }
   function autoCompleteMethod(fieldId){
     jQuery("#"+fieldId ).autocomplete({
-      source: "search.php?type="+fieldId+"",
+      //source: "search.php?type="+fieldId+"",
+      source: ajaxurl + "?action=custom-ajax&type=" +fieldId+"",
     });    
   }
 });
