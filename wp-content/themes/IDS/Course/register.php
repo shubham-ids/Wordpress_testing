@@ -10,7 +10,7 @@
     <table class="form-table">
       <tbody>
         <?php
-          generalAddField('text' , 'city'             , 'City'             , empty($city)             ? '' : $city);
+  requiredGeneralAddField('text' , 'city'             , 'City'             , empty($city)             ? '' : $city);
           generalAddField('text' , 'level'            , 'Level'            , empty($level)            ? '' : $level);
           generalAddField('text' , 'course'           , 'Course'           , empty($course)           ? '' : $course);
           generalAddField('text' , 'start_date'       , 'Start Date'       , empty($start_time)       ? '' : $start_time);

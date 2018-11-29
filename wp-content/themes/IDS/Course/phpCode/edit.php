@@ -13,14 +13,10 @@
       $special_course    = $_REQUEST['special_course'];  
 
       $validationError = false;
-      if(empty($city) || empty($level) || empty($course) || empty($start_time) ){
-        $titleError = requiredMessage("error","Please fill the blank field");
-        $validationError = true;
-      } 
-      if(empty($long_time) || empty($accommodation) || empty($airport_transfer) || empty($special_course) ){
-        $titleError = requiredMessage("error","Please fill the blank field");
-        $validationError = true;
-      } 
+      if(empty($city)){
+        $titleError = requiredMessage("error","Please fill the <span>*</span> field");
+        $validationError = true;        
+      }
 
       if($validationError === false){
         $id = $_REQUEST['post'];        

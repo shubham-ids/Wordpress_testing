@@ -12,14 +12,18 @@
       $special_course    = $_REQUEST['special_course'];  
 
       $validationError = false;
-      if(empty($city) || empty($level) || empty($course) || empty($start_time) ){
-        $titleError = requiredMessage("error","Please fill the blank field");
-        $validationError = true;
-      } 
-      if(empty($long_time) || empty($accommodation) || empty($airport_transfer) || empty($special_course) ){
-        $titleError = requiredMessage("error","Please fill the blank field");
-        $validationError = true;
-      }                            
+      if(empty($city)){
+        $titleError = requiredMessage("error","Please fill the <span>*</span> field");
+        $validationError = true;        
+      }
+      // if(empty($city) || empty($level) || empty($course) || empty($start_time) ){
+      //   $titleError = requiredMessage("error","Please fill the blank field");
+      //   $validationError = true;
+      // } 
+      // if(empty($long_time) || empty($accommodation) || empty($airport_transfer) || empty($special_course) ){
+      //   $titleError = requiredMessage("error","Please fill the blank field");
+      //   $validationError = true;
+      // }                            
       if($validationError === false){
         $tableName = $wpdb->prefix .COURSE;     
         $row = [
@@ -37,11 +41,10 @@
           $message = requiredMessage("updated","Data inserted.");
         }else{
           $message = requiredMessage("error","Data Not inserted.");
-          define( 'WP_DEBUG_LOG', true );
         } 
       }  
     }    
   }catch(PDOException $e){
     echo "<h3 class='text-red'>your record is not insert please contact the developer</h3>";
-    echo $e->getMessage();
+   // echo $e->getMessage();
   }
