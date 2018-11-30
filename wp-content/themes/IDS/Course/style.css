@@ -9,8 +9,4 @@ Text Domain: twentysixteen
 This theme, like WordPress, is licensed under the GPL.
 Use it to make something cool, have fun, and share what you've learned with others.
 */
-.contentField {margin-bottom: 13px;}
-.titleName {font-size: 21px;margin-right: 24px;}
-.custom_textarea{height: 10em;width: 43em;}
-/*.custom_text{width: 43em;}*/
 .star-requiredField { color: rgb(255,0,0);}

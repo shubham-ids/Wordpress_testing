@@ -10,9 +10,9 @@
     <table class="form-table">
       <tbody>
         <?php
-          generalAddField('title' , 'Country' , empty($country) ? '' : $country,'Enter New Country');
+          generalAddField('text','title' , 'Country' , empty($country) ? '' : $country,'Enter New Country');
           generalAddtextField('description' , 'Description' , empty($description) ? '' : $description,'Enter Description');      
-        ?>
+        ?>        
       </tbody>
     </table>
      <?php generalbutton('register' , 'Save'); ?>    

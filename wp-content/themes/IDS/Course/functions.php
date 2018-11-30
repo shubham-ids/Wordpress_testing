@@ -10,22 +10,17 @@ if(!class_exists('WP_List_Table')){
 /*
 * THis method is used to add the custom JS / CSS file
 */
-add_action( 'wp_enqueue_scripts', 'custom_child', 10 );
-function custom_child() {
-  wp_enqueue_style( 'twentysixteen', get_template_directory_uri() . '/style.css' );
-  wp_enqueue_style( 'custom-child', get_stylesheet_directory_uri() . '/style.css' );
-}
 
 add_action( 'admin_enqueue_scripts', 'custom_css' );
 function custom_css(){
- wp_enqueue_style( 'custom-child', get_stylesheet_directory_uri() . '/style.css' );
+ wp_enqueue_style( 'custom-child', get_stylesheet_directory_uri() . '/Course/style.css' );
  wp_enqueue_style( 'jquery-ui','//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' );
- wp_enqueue_script( 'jquery-ui', '//code.jquery.com/ui/1.12.1/jquery-ui.js' );
- wp_enqueue_script( 'custom-js', get_stylesheet_directory_uri() . '/custom-js.js' ); 
+ wp_enqueue_script( 'jquery-ui', '//code.jquery.com/ui/1.12.1/jquery-ui.js', array('jquery') );
+ wp_enqueue_script( 'custom-js', get_stylesheet_directory_uri() . '/Course/custom-js.js', array('jquery-ui') ); 
 }
 
-add_action( 'wp_ajax_custom-ajax', 'custom_ajax_code' );
-function custom_ajax_code(){
+add_action( 'wp_ajax_custom-ajax', 'ids_ajax_code' );
+function ids_ajax_code(){
 
   global $wpdb;
 // Generate skills data array
@@ -51,40 +46,43 @@ function custom_ajax_code(){
 /**
  * Register a custom menu page.
  */
-function wpdocs_register_my_custom_menu_Course() {
+function ids_custom_menu() {
   add_menu_page(
     'Course',               // Title page
     'courses',              // Menu Name
     'manage_options',       // Capability
     'add-course',           // Slug
-    'addNew_course',        // Function Name
+    'addNewCourse',        // Function Name
     'dashicons-welcome-learn-more', // Icon
     5
   );   
  
 }
-add_action( 'admin_menu', 'wpdocs_register_my_custom_menu_Course' );
+add_action( 'admin_menu', 'ids_custom_menu' );
 
-function addNew_course(){
+function addNewCourse(){
   global $wpdb;
+
+
+  $cfp = dirname( __FILE__ ) . DIRECTORY_SEPARATOR ; // current folder path
   if($_REQUEST['action'] == 'add'){
-    include_once('Course/phpCode/add.php');
-    include_once('Course/register.php');
+    include_once($cfp . 'Crud/add.php');
+    include_once($cfp . 'register.php');
     return;
   }
   if(!isset($_REQUEST['action'])){
-    include_once('Course/phpCode/list.php');
-    include_once('Course/listing.php');
+    include_once($cfp . 'Crud/list.php');
+    include_once($cfp . 'listing.php');
     return;
    }
   if($_REQUEST['action'] == 'deleted'){
-    include_once('Course/phpCode/list.php');
-    include_once('Course/listing.php');
+    include_once($cfp . 'Crud/list.php');
+    include_once($cfp . 'listing.php');
     return;
    }  
   if($_REQUEST['action'] == 'edit'){
-    include_once('Course/phpCode/edit.php');
-    include_once('Course/update.php');
+    include_once($cfp . 'Crud/edit.php');
+    require( $cfp .  'update.php');
     return;
   }  
 }
@@ -117,7 +115,7 @@ function addNew_course(){
                  : $value : Enter the value of search field
  *
  */
-   function addSearchField($name , $value){ ?>
+  function addSearchField($name , $value){ ?>
     <p class="search-box">
       <label class="screen-reader-text" for="post-search-input">Search Posts:</label>
       <input 
@@ -129,14 +127,14 @@ function addNew_course(){
     </p> 
 <?php }
 /*
-* Function Name : requiredGeneralAddField
+* Function Name : generalAddField
 * Parameter     : $type : Enter the field type
                 : $name : Enter the field name
                 : $displayName : Display of custom name
                 : $value : Enter the field value
 * This function is used to add of the simple input field
 */
-  function generalAddField($type ,$name , $displayName ,$value){ ?>
+  function generalAddField($name , $displayName ,$value){ ?>
     <tr>
       <th scope="row"><label for="blogname"><?php echo $displayName; ?></label></th>
       <td>
@@ -152,7 +150,7 @@ function addNew_course(){
                 : $value : Enter the field value
 * This function is used to add of the * required field
 */
-  function requiredGeneralAddField($type ,$name , $displayName ,$value){ ?>
+  function requiredGeneralAddField($name , $displayName ,$value){ ?>
     <tr>
       <th scope="row"><label for="blogname"><?php echo $displayName; ?> <span class="star-requiredField">*</span></label></th>
       <td>

@@ -32,25 +32,31 @@ class Custom_List_Table extends WP_List_Table {
 
   function custom_record(){
     global $wpdb;
+    $orderby = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : 'title'; //If no sort, default to title
+    $order   = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'asc'; //If no order, default to asc    
     $table = $wpdb->prefix . COUNTRY; 
     if(!empty($_REQUEST['s'])){
       $queryPart = "
       WHERE
         `title` LIKE '%".$_REQUEST['s']."%'
       ";
-    }    
+    }  
+    if(!empty($orderby)){
+      $orderPart = " ORDER BY `$orderby` $order ";
+    }        
    $query = "
     SELECT
     *
     FROM 
       `".$table."`
-      {$queryPart} 
+      {$queryPart}
+      {$orderPart} 
    ";
    $fatchQuery = $wpdb->get_results($query);  
      foreach ($fatchQuery as $value) {
       $response[] = array(
           'id'          => $value->id, 
-          'title'       => $value->title,
+          'title'       =>  '<a class="row-title" href="'.admin_url('admin.php?page=manage-location-option','admin').'&post='. $value->id .'&amp;action=edit">'.$value->title.'</a>',
           'description' => mb_strimwidth($value->description, 0, 30, "....."),
           'create_on'   => $value->create_on
       );
@@ -203,7 +209,7 @@ class Custom_List_Table extends WP_List_Table {
     function get_sortable_columns() {
         $sortable_columns = array(
             'title'        => array('title',false),     //true means it's already sorted
-            'create_on'    => array('date',false),
+            'create_on'    => array('create_on',false),
             'description'  => array('description',false)
         );
         return $sortable_columns;
@@ -332,24 +338,6 @@ class Custom_List_Table extends WP_List_Table {
          */
         //$data = empty($data) ? '' : $data;
         $data = $this->custom_record();
-                
-        
-        /**
-         * This checks for sorting input and sorts the data in our array accordingly.
-         * 
-         * In a real-world situation involving a database, you would probably want 
-         * to handle sorting by passing the 'orderby' and 'order' values directly 
-         * to a custom query. The returned data will be pre-sorted, and this array
-         * sorting technique would be unnecessary.
-         */
-        function usort_reorder($a,$b){
-            $orderby = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : 'title'; //If no sort, default to title
-            $order = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'asc'; //If no order, default to asc
-            $result = strcmp($a[$orderby], $b[$orderby]); //Determine sort order
-            return ($order==='asc') ? $result : -$result; //Send final sort direction to usort
-        }
-        usort($data, 'usort_reorder');
-        
         
         /***********************************************************************
          * ---------------------------------------------------------------------
@@ -380,15 +368,6 @@ class Custom_List_Table extends WP_List_Table {
          */
 
         $total_items = count($data);
-        
-        /**
-         * The WP_List_Table class does not handle pagination for us, so we need
-         * to ensure that the data is trimmed to only the current page. We can use
-         * array_slice() to 
-         */
-        $data = array_slice($data,(($current_page-1)*$per_page),$per_page);
-        
-        
         
         /**
          * REQUIRED. Now we can add our *sorted* data to the items property, where 

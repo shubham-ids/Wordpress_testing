@@ -10,7 +10,7 @@
     <table class="form-table">
       <tbody>
         <?php
-          generalAddField('title' , 'District' , empty($country) ? '' : $country,'Enter New District');
+          generalAddField('text','title' , 'District' , empty($country) ? '' : $country,'Enter New District');
           generalAddtextField('description' , 'Description' , empty($description) ? '' : $description,'Enter Description');
           generalDropDown('Select Country','country_id' , empty($_REQUEST['country_id']) ? '' : $_REQUEST['country_id']);
           dependentDropdown('State' , 'state_id' , 'state')      
@@ -20,4 +20,3 @@
      <?php generalbutton('register' , 'Save'); ?>    
   </form>  
 </div>
-<?php jqueryAjax(); ?>

@@ -1,8 +1,7 @@
 <?php
   try{
-    $message = "";
-    $tableName = $wpdb->prefix . COURSE;
-    if(isset($_REQUEST['update'])){
+    $message = ""; 
+    if(isset($_REQUEST['register'])){
       $city              = $_REQUEST['city'];
       $level             = $_REQUEST['level'];
       $course            = $_REQUEST['course'];
@@ -16,11 +15,10 @@
       if(empty($city)){
         $titleError = requiredMessage("error","Please fill the <span>*</span> field");
         $validationError = true;        
-      }
-
+      }                        
       if($validationError === false){
-        $id = $_REQUEST['post'];        
-        $data = [
+        $tableName = $wpdb->prefix .COURSE;     
+        $row = [
           'city'              => $city,
           'level'             => $level,
           'course'            => $course,
@@ -28,19 +26,17 @@
           'long_date'         => $long_time,
           'accommodation'     => $accommodation,
           'airport_transfer'  => $airport_transfer,
-          'special_course'    => $special_course 
+          'special_course'    => $special_course                       
         ];
-        $updateRecord = $wpdb->update($tableName , $data , array('id' => $id ) ,array('%s','%s' ,'%s','%s','%s','%s' ,'%s','%s') , array('%d'));
-        if($updateRecord !== false){
-          $message = requiredMessage("updated","Data updated.");
+        $responce = $wpdb->insert($tableName , $row ,array('%s','%s','%s','%s','%s','%s','%s','%s'));
+        if($responce !== false){
+          $message = requiredMessage("updated","Data inserted.");
         }else{
-          $message = requiredMessage("error","Data is not updated.");
+          $message = requiredMessage("error","Data Not inserted.");
         } 
-      }
-    }     
-    $row = $wpdb->get_results("SELECT * FROM ".$tableName." WHERE id =".$_REQUEST['post'] );
+      }  
+    }    
   }catch(PDOException $e){
-    //echo "Not display the record contact the developer";
-    echo $e->getMessage();
+    echo "<h3 class='text-red'>your record is not insert please contact the developer</h3>";
+   // echo $e->getMessage();
   }
-?>

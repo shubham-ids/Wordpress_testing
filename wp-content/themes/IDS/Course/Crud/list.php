@@ -64,7 +64,7 @@ class Custom_Course_List_Table extends WP_List_Table {
      foreach ($fatchQuery as $value) {
       $response[] = array(
           'id'               => $value->id,
-          'city'             => $value->city,
+          'city'             => '<a class="row-city" href="'.admin_url('admin.php?page=add-course','admin').'&post='. $value->id .'&amp;action=edit">'.$value->city.'</a>',
           'level'            => $value->level,
           'course'           => $value->course,
           'start_date'       => $value->start_date,

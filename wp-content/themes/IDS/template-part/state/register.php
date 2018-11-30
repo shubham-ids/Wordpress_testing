@@ -10,7 +10,7 @@
     <table class="form-table">
       <tbody>
         <?php
-          generalAddField('title' , 'State' , empty($country) ? '' : $country,'Enter New State');
+          generalAddField('text','title' , 'State' , empty($country) ? '' : $country,'Enter New State');
           generalAddtextField('description' , 'Description' , empty($description) ? '' : $description,'Enter Description');
           generalDropDown('Select Country','country_id' , empty($_REQUEST['country_id']) ? '' : $_REQUEST['country_id']);      
         ?>       
