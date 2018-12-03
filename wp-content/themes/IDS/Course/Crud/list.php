@@ -34,7 +34,7 @@ class Custom_Course_List_Table extends WP_List_Table {
     global $wpdb;
     $orderby = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : 'city'; //If no sort, default to title
     $order   = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'asc'; //If no order, default to asc
-    $table   = $wpdb->prefix . COURSE; 
+    $table   = $wpdb->prefix . 'courses'; 
     if(!empty($_REQUEST['s'])){
       $queryPart = "
       WHERE
@@ -60,9 +60,10 @@ class Custom_Course_List_Table extends WP_List_Table {
       {$queryPart}
       {$orderPart} 
    ";
+
    $fatchQuery = $wpdb->get_results($query);  
      foreach ($fatchQuery as $value) {
-      $response[] = array(
+        $response[] = array(
           'id'               => $value->id,
           'city'             => '<a class="row-city" href="'.admin_url('admin.php?page=add-course','admin').'&post='. $value->id .'&amp;action=edit">'.$value->city.'</a>',
           'level'            => $value->level,

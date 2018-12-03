@@ -11,7 +11,6 @@
       <tbody>
         <?php
           generalAddField(
-            'text',
             'title' , 
             'Country' , 
             empty($row[0]->title) ? '' : $row[0]->title ,

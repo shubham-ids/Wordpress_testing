@@ -1,123 +1,36 @@
-<div class="wrap">
-  <h1 class="wp-heading-inline">
-    Districtes
-  </h1>
-  <a href="<?php echo admin_url('admin.php?page=add-new-city','admin'); ?>&&amp;action=add" class="page-title-action">Add New</a>
-  <hr class="wp-header-end">
-    <h2 class="screen-reader-text">
-      Filter posts list
-    </h2>
-    <ul class="subsubsub">
-      <li class="all"><a href="edit.php?post_type=post" class="current" aria-current="page">All <span class="count">(<?php echo $rowCount; ?>)</span></a> |</li>
-    </ul>
-    <form id="posts-filter" method="post">
-      <?php echo $message; ?>
-      <?php 
-        addSearchField('searchBar' , empty($searchBar) ? '' : $searchBar);
-        $addOption = [
-          ''        => 'Bulk Actions',
-          'deleted' => 'Move to Trash'
-        ];
-        addBulkactionField('top' , $addOption , 'multiAction' , $rowCount);
-      ?>      
-      <table class="wp-list-table widefat fixed striped posts">
-        <thead>
-          <tr>
-            <td id="cb" class="manage-column column-cb check-column">
-              <label class="screen-reader-text" for="cb-select-all-1">Select All</label>
-              <input id="cb-select-all-1" type="checkbox">
-            </td>  
-            <th 
-              scope="col" 
-              id="title" 
-              class="manage-column column-title column-primary sortable desc">
-              <a href="<?php echo admin_url('admin.php?page=add-new-city','admin')?>&order-by=title&order=<?php echo $order == 'desc'?'asc':'desc'; ?>">
-              <span>Districtes</span>
-              <span class="sorting-indicator"></span>
-              </a>
-            </th>                      
-            <?php  
-              $tableHead = [
-                'description' => 'Description',
-                'country_id'  => 'Country',
-                'state_id'    => 'State',
-                'district_id' => 'District'
-              ];
-              renderTableHead($tableHead , $order);  
-            ?>   
-            <th scope="col" id="date" class="manage-column column-date sortable asc">
-              <a href="http://localhost/wordpress/wp-admin/edit.php?orderby=date&amp;order=desc"><span>Date</span>
-                <span class="sorting-indicator"></span>
-              </a>
-            </th>          
-          </tr>
-        </thead>
-        <tbody id="the-list">
-          <?php 
-            foreach( $result as $row ){
-          ?>
-          <tr id="post-1" class="iedit author-self level-0 post-1 type-post status-publish format-standard hentry category-uncategorized">
-            <th scope="row" class="check-column"> 
-              <label class="screen-reader-text" for="cb-select-<?php echo $row->id; ?>""></label>
-              <input id="cb-select-<?php echo $row->id; ?>" type="checkbox" name="users[]" value="<?php echo $row->id; ?>">
-            </th>
-             <td class="title column-title has-row-actions column-primary page-title" data-colname="Title">
-                <strong>
-                  <a class="row-title" href="<?php echo admin_url('admin.php?page=add-new-city','admin'); ?>&post=<?php echo $row->id; ?>&amp;action=edit"><?php echo $row->title; ?></a>
-                </strong>
+<?php
 
-                <div class="row-actions">
-                  <span class="edit"><a href="<?php echo admin_url('admin.php?page=add-new-city','admin'); ?>&post=<?php echo $row->id; ?>&amp;action=edit">Edit</a> | </span>
-                  <span class="trash">
-                    <a href="<?php echo admin_url('admin.php?page=add-new-city','admin'); ?>&task=delete&post=<?php echo $row->id; ?>" class="submitdelete">Trash
-                    </a>
-                  </span>
-                </div>
-              </td>
-              <td class="categories column-categories" data-colname="Categories">
-                  <?php $string = $row->description; echo mb_strimwidth($string, 0, 30, "....."); ?>
-              </td>
-              <td class="categories column-categories" data-colname="Categories">
-                <?php echo $row->cTitle; ?>
-              </td>
-              <td class="categories column-categories" data-colname="Categories">
-                <?php echo $row->sTitle; ?>
-              </td>
-              <td class="categories column-categories" data-colname="Categories">
-                <?php echo $row->dTitle; ?>
-              </td>              
-              <td class="date column-date" data-colname="Date">
-                <abbr title="<?php echo $row->create_on; ?>"><?php echo $row->create_on; ?></abbr>
-              </td>   
-          </tr>
-        <?php } ?>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td id="cb" class="manage-column column-cb check-column">
-              <label class="screen-reader-text" for="cb-select-all-1">Select All</label>
-              <input id="cb-select-all-1" type="checkbox">
-            </td>  
-            <th 
-              scope="col" 
-              id="title" 
-              class="manage-column column-title column-primary sortable desc">
-              <a href="<?php echo admin_url('admin.php?page=add-new-state','admin')?>&order-by=title&order=<?php echo $order == 'desc'?'asc':'desc'; ?>">
-              <span>States</span>
-              <span class="sorting-indicator"></span>
-              </a>
-            </th>                      
-            <?php renderTableHead($tableHead , $order); ?>   
-            <th scope="col" id="date" class="manage-column column-date sortable asc">
-              <a href="http://localhost/wordpress/wp-admin/edit.php?orderby=date&amp;order=desc"><span>Date</span>
-                <span class="sorting-indicator"></span>
-              </a>
-            </th>          
-          </tr>
-        </tfoot>
-      </table>
-      <?php 
-        addBulkactionField('top' , $addOption , 'multiAction' , $rowCount);
-      ?>
-  </form>  
-</div>
+/** *************************** RENDER TEST PAGE ********************************
+ *******************************************************************************
+ * This function renders the admin page and the example list table. Although it's
+ * possible to call prepare_items() and display() from the constructor, there
+ * are often times where you may need to include logic here between those steps,
+ * so we've instead called those methods explicitly. It keeps things flexible, and
+ * it's the way the list tables are used in the WordPress core.
+ */
+    
+    //Create an instance of our package class...
+    $testListTable = new IDS_District_List_Table();
+    //Fetch, prepare, sort, and filter our data...
+    $testListTable->prepare_items();
+    
+    ?>
+    <div class="wrap">    
+        <div id="icon-users" class="icon32"><br/></div>
+          <h1 class="wp-heading-inline">
+            Cities
+          </h1>
+          <?php echo $message; ?>
+        <a href="<?php echo admin_url('admin.php?page=add-new-city','admin'); ?>&&amp;action=add" class="page-title-action">Add New</a>
+        <!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
+        <form id="movies-filter" method="post" action="">
+            <!-- Now we can render the completed list table -->
+            <?php 
+              $testListTable->search_box( 'search', 'search_id' );            
+            ?>
+        </form>
+        <form method="post" action="">
+            <?php $testListTable->display(); ?> 
+        </form>          
+        
+    </div>

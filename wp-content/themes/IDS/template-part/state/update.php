@@ -5,12 +5,12 @@
   echo $message;
 ?>   
 <div class="wrap">
-  <h1 class="wp-heading-inline">Update State fbfb</h1> 
+  <h1 class="wp-heading-inline">Update State</h1> 
   <form method="post">
     <table class="form-table">
       <tbody>
         <?php
-          generalAddField('text','title' , 'State' , empty($row[0]->title) ? '' : $row[0]->title,'Enter New State');
+          generalAddField('title' , 'State' , empty($row[0]->title) ? '' : $row[0]->title,'Enter New State');
           generalAddtextField(
             'description' , 
             'Description' ,

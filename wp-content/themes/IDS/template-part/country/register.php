@@ -10,7 +10,7 @@
     <table class="form-table">
       <tbody>
         <?php
-          generalAddField('text','title' , 'Country' , empty($country) ? '' : $country,'Enter New Country');
+          generalAddField('title' , 'Country' , empty($country) ? '' : $country,'Enter New Country');
           generalAddtextField('description' , 'Description' , empty($description) ? '' : $description,'Enter Description');      
         ?>        
       </tbody>

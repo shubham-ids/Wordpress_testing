@@ -1,16 +1,16 @@
 <?php
   try{
-    $message = "";
+    $message   = "";
     $tableName = $wpdb->prefix . CITY;
     if(isset($_REQUEST['update'])){
-      $city     = $_REQUEST['title'];
+      $city        = $_REQUEST['title'];
       $description = $_REQUEST['description'];
       $countryId   = $_REQUEST['country_id'];
       $stateId     = $_REQUEST['state_id'];
       $districtId  = $_REQUEST['district_id'];
 
       $validationError = false;
-      if(empty($city) || empty($description) || empty($countryId) || empty($stateId) || empty($districtId)){
+      if(empty($city) || empty($description) || empty($countryId) ){
         $titleError = requiredMessage("error","Please fill the blank field");
         $validationError = true;
       }  
